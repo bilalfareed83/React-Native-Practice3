@@ -1,45 +1,23 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button, TextInput } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
+import axios from 'axios';
 
 export default class App extends React.Component {
   state = {
-    text: '',
-    todos: [],
+    text: 'Loading...',
   };
 
-  add = () => {
-    const margedArray = [...this.state.todos, this.state.text];
-    this.setState({ todos: margedArray, text: '' });
-  };
-
-  del = () => {};
-
+  componentDidMount() {
+    axios.get('https://jsonplaceholder.typicode.com/users').then((res) => {
+      console.log(res);
+      this.setState({ text: res.data[0].name });
+    });
+  }
   render() {
-    console.log(this.state.todos);
     return (
       <View style={styles.container}>
-        <Text>Todos App</Text>
-        <TextInput
-          placeholder="Add Todos"
-          onChangeText={(text) => {
-            this.setState({ text: text });
-          }}
-        />
-        <Button title="Add todo" onPress={this.add} />
-
-        {this.state.todos.map((el, i) => {
-          return (
-            <Text
-              key={i}
-              onPress={() => {
-                this.state.todos.splice(i, 1);
-                this.setState({ todos: this.state.todos });
-              }}
-            >
-              {el}
-            </Text>
-          );
-        })}
+        <Text>{this.state.text}</Text>
+        <Text>React Native Practice</Text>
       </View>
     );
   }
